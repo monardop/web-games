@@ -1,0 +1,118 @@
+body{
+	background-color: #ff8a80;
+	text-decoration: none;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+
+:root {
+	--logotipo: rgb(214, 210, 210);
+	--profesion: rgb(44, 44, 44);
+	--primario: rgb(82, 82, 82);
+}
+
+.presentation {
+	width: 90%;
+	margin: auto;
+	max-width: 800px;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.logotipo {
+	padding: 10px;
+	border: 5px solid var(--logotipo);
+	color: var(--logotipo);
+	text-decoration: none;
+}
+
+.logotipo .subtitulo {
+	text-align: center;
+	color: var(--profesion);
+	background: var(--logotipo);
+	padding: 12px 20px;
+	transition: .5s ease all;
+	font-size: 36px;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+}
+
+.logotipo:hover .subtitulo {
+	background: var(--primario);
+	color: #fff;
+}
+
+.texto-animado {
+	display: flex;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.texto-animado > div {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	transition: .3s ease all;
+}
+
+.texto-animado > div.animacion {
+	transform: translateY(-100px);
+}
+
+.texto-animado > div span {
+	font-size: 100px;
+	font-weight: normal;
+	line-height: 100px;
+}
+
+.texto-animado .segunda-linea {
+	position: absolute;
+	top: 100px;
+}
+
+@media screen and (max-width: 600px){
+	.texto-animado > div span {
+		font-size: 50px;
+		line-height: 50px;
+	}
+
+	.texto-animado .segunda-linea {
+		top: 50px;
+	}
+
+	.texto-animado > div.animacion {
+		transform: translateY(-50px);
+	}
+
+	.logotipo .subtitulo {
+		font-size: 20px;
+	}
+}
+
+nav{
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+}
+
+nav >a{
+	color: var(--profesion);
+	background-color: var(--logotipo);
+	text-align:center;
+	text-decoration: none;
+	width: 200px;
+	padding: 10px 0;
+}
+
+nav>a:hover{
+	color: var(--logotipo);
+	background-color: var(--profesion);
+	transition: all 0.3s ease-in;
+}
