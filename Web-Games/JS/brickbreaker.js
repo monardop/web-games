@@ -18,6 +18,7 @@ var brickPadding = 10;
 var brickOffsetTop = 30;
 var brickOffsetLeft = 30;
 var score = 0;
+var lives = 3;
 
 var bricks = [];
 for(c=0; c<brickColumnCount; c++) {
@@ -29,6 +30,7 @@ for(c=0; c<brickColumnCount; c++) {
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
 
 function keyDownHandler(e) {
     if(e.keyCode == 39) {
@@ -46,6 +48,12 @@ function keyUpHandler(e) {
         leftPressed = false;
     }
 }
+function mouseMoveHandler(e) {
+    var relativeX = e.clientX - canvas.offsetLeft;
+    if(relativeX > 0 && relativeX < canvas.width) {
+        paddleX = relativeX - paddleWidth/2;
+    }
+}
 function collisionDetection() {
     for(c=0; c<brickColumnCount; c++) {
         for(r=0; r<brickRowCount; r++) {
@@ -56,7 +64,7 @@ function collisionDetection() {
                     b.status = 0;
                     score++;
                     if(score == brickRowCount*brickColumnCount) {
-                        alert("YOU WIN, CONGRATS!");
+                        alert("YOU WIN");
                         document.location.reload();
                     }
                 }
@@ -68,14 +76,14 @@ function collisionDetection() {
 function drawBall() {
     ctx.beginPath();
     ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-    ctx.fillStyle = "#ff1744";
+    ctx.fillStyle = "#FF1744";
     ctx.fill();
     ctx.closePath();
 }
 function drawPaddle() {
     ctx.beginPath();
     ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
-    ctx.fillStyle = "#ff8a80";
+    ctx.fillStyle = "#FF8A80";
     ctx.fill();
     ctx.closePath();
 }
@@ -89,7 +97,7 @@ function drawBricks() {
                 bricks[c][r].y = brickY;
                 ctx.beginPath();
                 ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                ctx.fillStyle = "#ff8a80";
+                ctx.fillStyle = "#FF8A80";
                 ctx.fill();
                 ctx.closePath();
             }
@@ -98,8 +106,32 @@ function drawBricks() {
 }
 function drawScore() {
     ctx.font = "16px Arial";
-    ctx.fillStyle = "#ff8a80";
+    ctx.fillStyle = "#FF1744";
     ctx.fillText("Score: "+score, 8, 20);
+}
+function drawLives() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#FF1744";
+    ctx.fillText("Lives: "+lives, canvas.width-65, 20);
+}
+
+function speedUp(){
+    if (score == 5){
+        dx = 4;
+        dy = -4
+    }
+    else if (score == 10){
+        dx = 6;
+        dy= -6;
+    }
+    else if(score==20){
+        dx=8;
+        dy=-8;
+    }
+    else if (score == 25) {
+        dx = 10;
+        dy = -10;
+    }
 }
 
 function draw() {
@@ -108,7 +140,9 @@ function draw() {
     drawBall();
     drawPaddle();
     drawScore();
+    drawLives();
     collisionDetection();
+    speedUp();
     
     if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
         dx = -dx;
@@ -121,8 +155,18 @@ function draw() {
             dy = -dy;
         }
         else {
-            y = canvas.height-30;            
-            document.location.reload();
+            lives--;
+            if(!lives) {
+                alert("OMAE WA MOU SHINDEIRU");
+                document.location.reload();
+            }
+            else {
+                x = canvas.width/2;
+                y = canvas.height-30;
+                dx = 3;
+                dy = -3;
+                paddleX = (canvas.width-paddleWidth)/2;
+            }
         }
     }
     
@@ -133,13 +177,12 @@ function draw() {
         paddleX -= 7;
     }
     
-    x += dx;
+    x +=  dx;
     y += dy;
 
-    function speedUp(){
-        (x+=dx)*1.1;
-     };
-     setInterval(speedUp,6000)
+
+
+    requestAnimationFrame(draw);
 }
 
-setInterval(draw, 10);
+draw();
